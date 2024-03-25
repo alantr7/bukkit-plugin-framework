@@ -1,0 +1,8 @@
+com\github\alantr7\bukkitplugin\gui\CloseInitiator.class
+com\github\alantr7\bukkitplugin\gui\GUI$Action.class
+com\github\alantr7\bukkitplugin\gui\GuiModule.class
+com\github\alantr7\bukkitplugin\gui\GuiManager.class
+com\github\alantr7\bukkitplugin\gui\ClickType.class
+com\github\alantr7\bukkitplugin\gui\event\PlayerGuiCloseEvent.class
+com\github\alantr7\bukkitplugin\gui\GUI.class
+com\github\alantr7\bukkitplugin\gui\GuiListener.class
