@@ -37,4 +37,8 @@ public abstract class BukkitPlugin extends JavaPlugin {
         return beanManager.getAnnotationManager();
     }
 
+    public <T> T getSingleton(Class<T> clazz) {
+        return beanManager.getSingleton(clazz);
+    }
+
 }

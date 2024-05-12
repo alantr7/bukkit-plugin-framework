@@ -62,4 +62,8 @@ public class BeanManager {
         tasks.getOrDefault(schedule, Collections.emptyList()).forEach(Runnable::run);
     }
 
+    public <T> T getSingleton(Class<T> clazz) {
+        return (T) singletons.get(clazz.getName());
+    }
+
 }
