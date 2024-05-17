@@ -113,7 +113,7 @@ public class CommandBuilder {
             }
         }
 
-        return new Command(command, parameters, matches == -1 ? parameters.length : matches, indices, handler);
+        return new Command(command, parameters, permission, matches == -1 ? parameters.length : matches, indices, handler);
     }
 
 }

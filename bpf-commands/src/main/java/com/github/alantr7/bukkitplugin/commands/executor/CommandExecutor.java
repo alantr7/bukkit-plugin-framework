@@ -28,21 +28,17 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor, TabC
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull org.bukkit.command.Command command, @NotNull String label, @NotNull String[] args) {
-        long start = System.currentTimeMillis();
-        sender.sendMessage("Finding a match...");
         var handler = match(command.getName(), args);
-        sender.sendMessage("Match: " + handler);
         if (handler == null) {
-            sender.sendMessage("No match.");
+            sender.sendMessage("§cInvalid command syntax, please check your arguments.");
             return false;
         }
 
         if (!handler.isPermitted(sender)) {
-            sender.sendMessage("No access.");
+            sender.sendMessage("§cYou do not have access to that command.");
             return false;
         }
 
-        sender.sendMessage("Executed.");
         execute(handler, sender, args);
         return false;
     }
