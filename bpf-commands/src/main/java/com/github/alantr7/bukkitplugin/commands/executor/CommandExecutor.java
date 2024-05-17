@@ -2,6 +2,7 @@ package com.github.alantr7.bukkitplugin.commands.executor;
 
 import com.github.alantr7.bukkitplugin.BukkitPlugin;
 import com.github.alantr7.bukkitplugin.commands.registry.Command;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.NotNull;
@@ -30,12 +31,12 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor, TabC
     public boolean onCommand(@NotNull CommandSender sender, @NotNull org.bukkit.command.Command command, @NotNull String label, @NotNull String[] args) {
         var handler = match(command.getName(), args);
         if (handler == null) {
-            sender.sendMessage("§cInvalid command syntax, please check your arguments.");
+            sender.sendMessage(ChatColor.RED + "Invalid command syntax, please check your arguments.");
             return false;
         }
 
         if (!handler.isPermitted(sender)) {
-            sender.sendMessage("§cYou do not have access to that command.");
+            sender.sendMessage(ChatColor.RED + "You do not have access to that command.");
             return false;
         }
 
