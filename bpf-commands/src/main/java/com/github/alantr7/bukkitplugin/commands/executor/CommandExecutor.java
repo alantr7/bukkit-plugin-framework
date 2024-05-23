@@ -198,8 +198,34 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor, TabC
 
     @Nullable
     @Override
-    public List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull org.bukkit.command.Command command, @NotNull String s, @NotNull String[] strings) {
-        return null;
+    public List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull org.bukkit.command.Command command, @NotNull String s, @NotNull String[] args) {
+
+        // Temporary solution: Only returns tab complete for static parameters
+        var cmd = this.registeredCommands.get(command.getName());
+        if (cmd == null)
+            return null;
+
+        var open = new LinkedList<>(cmd);
+        for (int i = 0; i < args.length - 1; i++) {
+            var iterator = open.iterator();
+            while (iterator.hasNext()) {
+                var handler = iterator.next();
+                if (handler.getMatches() <= i) {
+                    iterator.remove();
+                    continue;
+                }
+
+                var parameter = handler.getParameters()[i];
+                if (!parameter.isConstant() || !parameter.getName().equalsIgnoreCase(args[i])) {
+                    iterator.remove();
+                }
+            }
+        }
+
+        return open.isEmpty() ? Collections.emptyList() : open.stream()
+                .filter(handler -> args.length <= handler.getParameters().length && handler.getParameters()[args.length - 1].isConstant() && handler.getParameters()[args.length - 1].getName().startsWith(args[args.length - 1]))
+                .map(handler -> handler.getParameters()[args.length - 1].getName()).toList();
+
     }
 
 }
