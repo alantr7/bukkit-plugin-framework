@@ -51,7 +51,6 @@ public class BeanManager {
 
             var loader = new MetaLoader(resource.readAllBytes());
             annotationManager.initialize(loader);
-            System.out.println("Initialized :)");
 
         } catch (Exception e) {
             e.printStackTrace();

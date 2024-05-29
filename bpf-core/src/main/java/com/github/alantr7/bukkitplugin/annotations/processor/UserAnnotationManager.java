@@ -116,18 +116,15 @@ public class UserAnnotationManager {
                 processAnnotations(loadedField, field.getAnnotations(), (processor, ann) -> processor
                         .processField(loadedField, field, instance, ann)
                 );
-                System.out.println("Finding value for field...");
 
                 var fieldValue = requestValue(loadedField, field.getAnnotations(), (proc, ann) -> proc.getFieldValue(loadedField, field, instance, ann));
                 if (fieldValue.isPresent()) {
-                    System.out.println("Value found: " + fieldValue.get());
                     try {
                         loadedField.setAccessible(true);
                         loadedField.set(instance, fieldValue.get());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    System.out.println("Value set.");
                 }
             }
 

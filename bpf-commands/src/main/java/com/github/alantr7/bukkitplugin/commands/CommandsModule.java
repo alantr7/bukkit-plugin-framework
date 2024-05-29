@@ -27,7 +27,6 @@ public class CommandsModule extends PluginModule {
         manager.registerProcessor(CommandHandler.class, new AnnotationProcessor<>() {
             @Override
             public void processField(Field field, FieldMeta meta, Object classInstance, CommandHandler annotation) {
-                System.out.println("Found a command: " + meta.getName());
                 if (!meta.getType().getQualifiedName().equalsIgnoreCase(Command.class.getName())) {
                     getPlugin().getLogger().warning("Command '" + meta.getName() + "' is not of valid type.");
                     return;
@@ -45,8 +44,6 @@ public class CommandsModule extends PluginModule {
                         }
                     }
                     executor.registerCommand(command);
-
-                    getPlugin().getLogger().info("Registered command '" + meta.getName() + "'.");
                 } catch (Exception ignored) {
                     ignored.printStackTrace();
                     getPlugin().getLogger().warning("Could not register command '" + meta.getName() + "'.");
