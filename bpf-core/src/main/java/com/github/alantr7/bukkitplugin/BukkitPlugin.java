@@ -26,7 +26,10 @@ public abstract class BukkitPlugin extends JavaPlugin {
 
     public final void onDisable() {
         moduleManager.disable();
+
+        beanManager.executeTasks(Invoke.Schedule.BEFORE_PLUGIN_DISABLE);
         onPluginDisable();
+        beanManager.executeTasks(Invoke.Schedule.AFTER_PLUGIN_DISABLE);
     }
 
     protected abstract void onPluginEnable();
