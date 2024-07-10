@@ -1,10 +1,12 @@
 package com.github.alantr7.bukkitplugin.gui;
 
 import com.github.alantr7.bukkitplugin.modules.PluginModule;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 
 public class GuiModule extends PluginModule {
 
+    @Getter
     static GuiManager manager;
 
     @Override
