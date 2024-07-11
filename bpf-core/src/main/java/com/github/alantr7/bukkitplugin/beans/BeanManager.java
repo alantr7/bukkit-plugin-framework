@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class BeanManager {
 
@@ -33,6 +34,7 @@ public class BeanManager {
 
         singletons.put(plugin.getClass().getName(), plugin);
         singletons.put(BukkitPlugin.class.getName(), plugin);
+        singletons.put(Logger.class.getName(), plugin.getLogger());
     }
 
     public void init() {
