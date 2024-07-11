@@ -35,8 +35,7 @@ public class GuiManager {
         openGuis.remove(uuid);
     }
 
-    public List<Player> getPlayersWithGUI(Class<? extends GUI> guis) {
-
+    public List<Player> getPlayersWithActiveGUIs(Class<? extends GUI> guis) {
         List<Player> players = new ArrayList<>();
 
         openGuis.forEach((uuid, gui) -> {
@@ -50,7 +49,6 @@ public class GuiManager {
         });
 
         return players;
-
     }
 
     @SafeVarargs
