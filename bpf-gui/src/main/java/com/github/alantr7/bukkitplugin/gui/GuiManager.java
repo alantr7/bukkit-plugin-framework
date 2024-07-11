@@ -3,10 +3,7 @@ package com.github.alantr7.bukkitplugin.gui;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class GuiManager {
 
@@ -54,6 +51,26 @@ public class GuiManager {
 
         return players;
 
+    }
+
+    @SafeVarargs
+    public final Map<Class<? extends GUI>, Collection<Player>> getPlayersWithActiveGUIs(Class<? extends GUI>... guis) {
+        if (guis.length == 0)
+            return Collections.emptyMap();
+
+        var map = new HashMap<Class<? extends GUI>, Collection<Player>>();
+        openGuis.forEach((uuid, gui) -> {
+            for (var gui1 : guis) {
+                if (gui1 != gui.getClass())
+                    continue;
+
+                var player = Bukkit.getPlayer(uuid);
+                if (player != null)
+                    map.computeIfAbsent(gui1, v -> new LinkedList<>()).add(player);
+            }
+        });
+
+        return map;
     }
 
     public GuiListener getEventListener() {
