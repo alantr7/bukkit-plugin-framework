@@ -1,6 +1,7 @@
 package com.github.alantr7.bukkitplugin.gui;
 
 import com.github.alantr7.bukkitplugin.BukkitPlugin;
+import com.github.alantr7.bukkitplugin.gui.event.PlayerGuiCloseEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -33,6 +34,8 @@ public abstract class GUI {
     private boolean isDisposed = false;
 
     private boolean isCancelled = false;
+
+    private boolean isClosed = false;
 
     private boolean isItemInteractionEnabled = true;
 
@@ -116,7 +119,15 @@ public abstract class GUI {
     }
 
     public final void close(CloseInitiator reason) {
+        if (isClosed)
+            return;
+
+        this.isClosed = true;
         this.closeInitiator = reason;
+
+        PlayerGuiCloseEvent event1 = new PlayerGuiCloseEvent(player, this, reason);
+        Bukkit.getPluginManager().callEvent(event1);
+
         if (reason == CloseInitiator.BUKKIT) {
             onInventoryClose(CloseInitiator.BUKKIT);
             runEventCallbacks(Action.CLOSE);
@@ -264,6 +275,10 @@ public abstract class GUI {
 
     void interact(InventoryClickEvent event) {
         _interact(event.getRawSlot(), event.getClick(), event);
+    }
+
+    public boolean isClosed() {
+        return isClosed;
     }
 
     public void cancel() {

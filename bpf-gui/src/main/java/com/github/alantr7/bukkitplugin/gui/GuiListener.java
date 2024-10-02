@@ -45,23 +45,17 @@ public class GuiListener implements Listener {
 
     @EventHandler (priority = EventPriority.LOWEST)
     public void onInventoryClose(InventoryCloseEvent event) {
-
         GUI gui = guiManager.getOpenInventory(event.getPlayer().getUniqueId());
         if (gui == null) return;
 
         activeCloseEvents.put((Player) event.getPlayer(), event);
-
         guiManager.removeInventory(event.getPlayer().getUniqueId());
-
-        PlayerGuiCloseEvent event1 = new PlayerGuiCloseEvent((Player) event.getPlayer(), gui);
-        Bukkit.getPluginManager().callEvent(event1);
 
         gui.close(CloseInitiator.BUKKIT);
 
         if (gui.isDisposedOnClose()) {
             gui.dispose();
         }
-
     }
 
     @EventHandler (priority = EventPriority.MONITOR)

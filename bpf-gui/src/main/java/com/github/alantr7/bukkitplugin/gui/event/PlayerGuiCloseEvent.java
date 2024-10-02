@@ -1,5 +1,6 @@
 package com.github.alantr7.bukkitplugin.gui.event;
 
+import com.github.alantr7.bukkitplugin.gui.CloseInitiator;
 import com.github.alantr7.bukkitplugin.gui.GUI;
 import lombok.Getter;
 import org.bukkit.entity.Player;
@@ -17,9 +18,13 @@ public class PlayerGuiCloseEvent extends Event {
     @Getter
     private final GUI gui;
 
-    public PlayerGuiCloseEvent(Player player, GUI gui) {
+    @Getter
+    private final CloseInitiator initiator;
+
+    public PlayerGuiCloseEvent(Player player, GUI gui, CloseInitiator closeInitiator) {
         this.player = player;
         this.gui = gui;
+        this.initiator = closeInitiator;
     }
 
     @NotNull
