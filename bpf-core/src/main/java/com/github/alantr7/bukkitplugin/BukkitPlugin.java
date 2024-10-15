@@ -4,7 +4,11 @@ import com.github.alantr7.bukkitplugin.annotations.core.Invoke;
 import com.github.alantr7.bukkitplugin.annotations.processor.UserAnnotationManager;
 import com.github.alantr7.bukkitplugin.beans.BeanManager;
 import com.github.alantr7.bukkitplugin.modules.ModuleManager;
+import com.github.alantr7.bukkitplugin.versions.Version;
+import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class BukkitPlugin extends JavaPlugin {
 
@@ -12,7 +16,17 @@ public abstract class BukkitPlugin extends JavaPlugin {
 
     private final BeanManager beanManager = new BeanManager(this);
 
+    @Getter(onMethod_ = @NotNull)
+    private Version version;
+
     public final void onEnable() {
+        version = Version.from(getDescription().getVersion());
+        if (version == Version.INVALID) {
+            getLogger().warning("Plugin will disable due to its invalid version: '" + getDescription().getVersion() + "'");
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
+
         moduleManager.init();
         moduleManager.annotations();
 
