@@ -1,14 +1,19 @@
 package com.github.alantr7.bukkitplugin.beans;
 
+import com.github.alantr7.bukkitplugin.annotations.config.Config;
+import com.github.alantr7.bukkitplugin.annotations.config.ConfigOption;
 import com.github.alantr7.bukkitplugin.annotations.core.*;
 import com.github.alantr7.bukkitplugin.annotations.processor.meta.*;
 import com.github.alantr7.bukkitplugin.annotations.processor.processing.AnnotationProcessor;
+import com.github.alantr7.bukkitplugin.annotations.processor.processing.ConfigLoader;
 import com.github.alantr7.bukkitplugin.annotations.processor.processing.ProcessChain;
 import com.github.alantr7.bukkitplugin.annotations.processor.processing.executable.ProvidedValue;
 import org.bukkit.Bukkit;
-import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.LinkedList;
@@ -26,6 +31,47 @@ public class DefaultProcessors {
         @Override
         public void processClass(Class<?> element, ClassMeta meta, Object instance, Singleton annotation) {
             manager.singletons.put(meta.getQualifiedName(), instance);
+        }
+    };
+
+    final AnnotationProcessor<Config> CONFIG = new AnnotationProcessor<>() {
+        @Override
+        public void processClass(Class<?> element, ClassMeta meta, Object instance, Config annotation) {
+            manager.singletons.put(meta.getQualifiedName(), instance);
+
+            File targetFile = new File(manager.plugin.getDataFolder(), annotation.value());
+
+            // Save default config if it doesn't exist
+            if (!targetFile.exists()) {
+                manager.plugin.getDataFolder().mkdirs();
+
+                if (manager.plugin.getResource(annotation.value()) != null) {
+                    manager.plugin.saveResource(annotation.value(), false);
+                } else try {
+                    targetFile.createNewFile();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            FileConfiguration config = YamlConfiguration.loadConfiguration(targetFile);
+            manager.configs.put(element.getName(), config);
+        }
+    };
+
+    final AnnotationProcessor<ConfigOption> CONFIG_OPTION = new AnnotationProcessor<>() {
+        @Override
+        public ProvidedValue getFieldValue(Field field, FieldMeta meta, Object classInstance, ConfigOption annotation) {
+            FileConfiguration config = manager.configs.get(classInstance.getClass().getName());
+            if (config == null)
+                return ProvidedValue.skip();
+
+            try {
+                return ConfigLoader.loadOption(config, field.getType(), field.get(classInstance), annotation);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return ProvidedValue.skip();
+            }
         }
     };
 

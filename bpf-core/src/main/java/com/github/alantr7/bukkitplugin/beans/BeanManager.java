@@ -24,6 +24,8 @@ public class BeanManager {
 
     final Map<String, Object> singletons = new HashMap<>();
 
+    final Map<String, FileConfiguration> configs = new HashMap<>();
+
     final Map<Integer, BukkitTask> timers = new HashMap<>();
 
     final Map<Invoke.Schedule, List<Runnable>> tasks = new HashMap<>();
@@ -46,6 +48,8 @@ public class BeanManager {
             }
 
             annotationManager.registerProcessor(Singleton.class, processors.SINGLETON);
+            annotationManager.registerProcessor(Config.class, processors.CONFIG);
+            annotationManager.registerProcessor(ConfigOption.class, processors.CONFIG_OPTION);
             annotationManager.registerProcessor(Inject.class, processors.INJECT);
             annotationManager.registerProcessor(Invoke.class, processors.INVOKE);
             annotationManager.registerProcessor(InvokePeriodically.class, processors.INVOKE_PERIODICALLY);
@@ -53,6 +57,18 @@ public class BeanManager {
 
             var loader = new MetaLoader(resource.readAllBytes());
             annotationManager.initialize(loader);
+
+            // Temporary solution
+            configs.forEach((name, config) -> {
+                var singleton = singletons.get(name);
+                var path = singleton.getClass().getAnnotation(Config.class).value();
+
+                try {
+                    config.save(new File(plugin.getDataFolder(), path));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
 
         } catch (Exception e) {
             e.printStackTrace();

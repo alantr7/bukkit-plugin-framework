@@ -21,6 +21,9 @@ import java.util.Set;
         "com.github.alantr7.bukkitplugin.annotations.core.InvokePeriodically",
         "com.github.alantr7.bukkitplugin.annotations.core.RequiresPlugin",
 
+        "com.github.alantr7.bukkitplugin.annotations.config.Config",
+        "com.github.alantr7.bukkitplugin.annotations.config.ConfigOption",
+
         "com.github.alantr7.bukkitplugin.commands.annotations.CommandHandler",
 })
 public class AnnotationScanner extends AbstractProcessor {
