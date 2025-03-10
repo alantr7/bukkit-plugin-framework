@@ -46,7 +46,7 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor, TabC
 
     private void execute(Command handle, CommandSender sender, String[] provided) {
         var map = handle.getParameters();
-        var context = new CommandContext(sender, handle, Math.max(map.length, provided.length));
+        var context = new CommandContext(sender, handle, provided, Math.max(map.length, provided.length));
 
         for (int i = 0; i < map.length; i++) {
 
@@ -184,6 +184,7 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor, TabC
 
         }
 
+        handlers.sort(Comparator.comparingInt(Command::getMatches).reversed());
         return handlers.isEmpty() ? null : handlers.get(0);
     }
 
@@ -210,22 +211,44 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor, TabC
             var iterator = open.iterator();
             while (iterator.hasNext()) {
                 var handler = iterator.next();
-                if (handler.getMatches() <= i) {
+                if (handler.getParameters().length <= i) {
                     iterator.remove();
                     continue;
                 }
 
                 var parameter = handler.getParameters()[i];
-                if (!parameter.isConstant() || !parameter.getName().equalsIgnoreCase(args[i])) {
+                if ((parameter.isVariable() && parameter.getTabComplete() == null) || (parameter.isConstant() && !parameter.getName().equalsIgnoreCase(args[i]))) {
                     iterator.remove();
                 }
             }
         }
 
-        return open.isEmpty() ? Collections.emptyList() : open.stream()
-                .filter(handler -> args.length <= handler.getParameters().length && handler.getParameters()[args.length - 1].isConstant() && handler.getParameters()[args.length - 1].getName().startsWith(args[args.length - 1]))
-                .map(handler -> handler.getParameters()[args.length - 1].getName()).toList();
+        if (open.isEmpty())
+            return Collections.emptyList();
 
+        var tabComplete = new LinkedList<String>();
+        open.forEach(handler -> {
+            if (args.length > handler.getParameters().length)
+                return;
+
+            if (handler.getParameters()[args.length - 1].isConstant()) {
+                if (handler.getParameters()[args.length - 1].getName().startsWith(args[args.length - 1]))
+                    tabComplete.add(handler.getParameters()[args.length - 1].getName());
+            } else {
+                var handlerTabComplete = handler.getParameters()[args.length - 1].getTabComplete();
+                if (handlerTabComplete == null)
+                    return;
+
+                var completions = handlerTabComplete.apply(args);
+                if (completions != null && !completions.isEmpty())
+                    for (String completion : completions) {
+                        if (completion.startsWith(args[args.length - 1]))
+                            tabComplete.add(completion);
+                    }
+            }
+        });
+
+        return tabComplete;
     }
 
 }

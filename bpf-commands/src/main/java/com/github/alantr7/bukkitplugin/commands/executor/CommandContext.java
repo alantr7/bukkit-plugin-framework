@@ -13,11 +13,15 @@ public class CommandContext {
 
     private final Command command;
 
+    @Getter
+    private final String[] rawArguments;
+
     private Object[] arguments;
 
-    public CommandContext(CommandSender executor, Command command, int arguments) {
+    public CommandContext(CommandSender executor, Command command, String[] rawArguments, int arguments) {
         this.executor = executor;
         this.command = command;
+        this.rawArguments = rawArguments;
         this.arguments = new Object[arguments];
     }
 
