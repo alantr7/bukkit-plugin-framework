@@ -38,7 +38,7 @@ public class Type {
         try {
             loadClass(false);
             return true;
-        } catch (Exception ignored) {
+        } catch (Error | Exception ignored) {
             return false;
         }
     }

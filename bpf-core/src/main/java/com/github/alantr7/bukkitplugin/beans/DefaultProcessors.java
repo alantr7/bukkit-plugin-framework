@@ -150,7 +150,7 @@ public class DefaultProcessors {
                     return;
                 }
 
-                Bukkit.getPluginManager().registerEvent((Class<Event>) params[0].getType(), DefaultProcessors.this.manager.plugin, annotation.priority(), (listener, event) -> {
+                Bukkit.getPluginManager().registerEvent((Class<Event>) params[0].getType(), manager.plugin, annotation.priority(), (listener, event) -> {
                     try {
                         if (params[0].getType().isInstance(event)) {
                             method.invoke(classInstance, event);

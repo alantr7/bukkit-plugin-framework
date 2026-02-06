@@ -88,7 +88,7 @@ public class ParameterBuilder<T> {
         boolean isVariable = name.startsWith("{") && name.endsWith("}");
         var literal = isVariable ? name.replace("{", "").replace("}", "") : name;
 
-        return new Parameter(literal, !isVariable, (Evaluator<Object>) evaluator, (BiFunction<CommandSender, CommandContext, Object>) defaultValue, ifMissingAction, ifEvalFail, testsBefore.toArray(Map.Entry[]::new), testsAfter.toArray(Map.Entry[]::new), this.tabCompleteLegacy != null ? (sender, args) -> (Collection)this.tabCompleteLegacy.apply(args) : this.tabComplete);
+        return new Parameter(literal, !isVariable, (Evaluator<Object>) evaluator, (Function<CommandContext, Object>) defaultValue, ifMissingAction, ifEvalFail, testsBefore.toArray(Map.Entry[]::new), testsAfter.toArray(Map.Entry[]::new), this.tabCompleteLegacy != null ? (sender, args) -> (Collection)this.tabCompleteLegacy.apply(args) : this.tabComplete);
     }
 
     public static Consumer<CommandContext> respond(String message) {

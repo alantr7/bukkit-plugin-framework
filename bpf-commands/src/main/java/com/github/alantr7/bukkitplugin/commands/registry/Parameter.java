@@ -20,7 +20,7 @@ public class Parameter {
     private final Evaluator<Object> evaluator;
 
     @Getter
-    private final BiFunction<CommandSender, CommandContext, Object> defaultValueProvider;
+    private final Function<CommandContext, Object> defaultValueProvider;
 
     @Getter
     private Consumer<CommandContext> missingParameterResponse;
@@ -37,7 +37,7 @@ public class Parameter {
     @Getter
     private BiFunction<CommandSender, String[], Collection<String>> tabComplete;
 
-    public Parameter(String name, boolean isConstant, Evaluator<Object> evaluator, BiFunction<CommandSender, CommandContext, Object> defaultValueProvider, Consumer<CommandContext> missingParameterResponse, BiConsumer<CommandContext, String> evalFailResponse, Map.Entry<Predicate<String>, BiConsumer<CommandContext, String>>[] testsBefore, Map.Entry<Predicate<Object>, BiConsumer<CommandContext, Object>>[] testsAfter, BiFunction<CommandSender, String[], Collection<String>> tabComplete) {
+    public Parameter(String name, boolean isConstant, Evaluator<Object> evaluator, Function<CommandContext, Object> defaultValueProvider, Consumer<CommandContext> missingParameterResponse, BiConsumer<CommandContext, String> evalFailResponse, Map.Entry<Predicate<String>, BiConsumer<CommandContext, String>>[] testsBefore, Map.Entry<Predicate<Object>, BiConsumer<CommandContext, Object>>[] testsAfter, BiFunction<CommandSender, String[], Collection<String>> tabComplete) {
         this.name = name;
         this.isConstant = isConstant;
         this.evaluator = evaluator;

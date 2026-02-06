@@ -25,6 +25,8 @@ import java.util.Set;
         "com.github.alantr7.bukkitplugin.annotations.config.ConfigOption",
 
         "com.github.alantr7.bukkitplugin.commands.annotations.CommandHandler",
+
+        "org.bukkit.event.EventHandler",
 })
 public class AnnotationScanner extends AbstractProcessor {
 
