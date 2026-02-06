@@ -17,4 +17,6 @@ public @interface JavaPlugin {
 
     String version() default "0.1.0";
 
+    String apiVersion() default "1.21.5";
+
 }

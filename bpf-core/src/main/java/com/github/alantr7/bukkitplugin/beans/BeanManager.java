@@ -1,12 +1,17 @@
 package com.github.alantr7.bukkitplugin.beans;
 
 import com.github.alantr7.bukkitplugin.BukkitPlugin;
+import com.github.alantr7.bukkitplugin.annotations.config.Config;
+import com.github.alantr7.bukkitplugin.annotations.config.ConfigOption;
 import com.github.alantr7.bukkitplugin.annotations.core.*;
 import com.github.alantr7.bukkitplugin.annotations.processor.UserAnnotationManager;
 import com.github.alantr7.bukkitplugin.annotations.processor.reader.MetaLoader;
 import lombok.Getter;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.event.EventHandler;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -54,6 +59,7 @@ public class BeanManager {
             annotationManager.registerProcessor(Invoke.class, processors.INVOKE);
             annotationManager.registerProcessor(InvokePeriodically.class, processors.INVOKE_PERIODICALLY);
             annotationManager.registerProcessor(RequiresPlugin.class, processors.REQUIRES_PLUGIN);
+            annotationManager.registerProcessor(EventHandler.class, processors.EVENT_HANDLER);
 
             var loader = new MetaLoader(resource.readAllBytes());
             annotationManager.initialize(loader);

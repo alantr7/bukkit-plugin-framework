@@ -7,10 +7,11 @@ import com.github.alantr7.bukkitplugin.modules.ModuleManager;
 import com.github.alantr7.bukkitplugin.versions.Version;
 import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class BukkitPlugin extends JavaPlugin {
+public abstract class BukkitPlugin extends JavaPlugin implements Listener {
 
     private final ModuleManager moduleManager = new ModuleManager(this);
 

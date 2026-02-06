@@ -6,8 +6,13 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="bukkit-plugin-annotations" />
+        <module name="bpf-core" />
+        <module name="bpf-gui" />
         <module name="bukkit-plugin-annotations-test" />
+        <module name="bukkit-plugin-annotations" />
+        <module name="bpf-annotations" />
+        <module name="bpf-test" />
+        <module name="bpf-commands" />
       </profile>
     </annotationProcessing>
   </component>

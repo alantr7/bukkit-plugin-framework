@@ -7,6 +7,16 @@
     <file url="file://$PROJECT_DIR$/../bukkit-plugin-annotations-parent/bukkit-plugin-annotations/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/../bukkit-plugin-annotations-parent/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/../bukkit-plugin-annotations-parent/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bpf-annotations/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bpf-annotations/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bpf-commands/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bpf-commands/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bpf-core/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bpf-core/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bpf-gui/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bpf-gui/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bpf-test/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bpf-test/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
   </component>

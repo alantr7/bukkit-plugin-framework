@@ -53,6 +53,7 @@ public class AnnotationProcessor extends AbstractProcessor {
                         PluginInfo.inst.setMainClass(plugin.main());
                     PluginInfo.inst.setMainClass(((TypeElement) element).getQualifiedName().toString());
                     PluginInfo.inst.setVersion(plugin.version());
+                    PluginInfo.inst.setApiVersion(plugin.apiVersion());
                     PluginInfo.inst.setDescription(plugin.description());
                 }
 

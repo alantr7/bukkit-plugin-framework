@@ -31,6 +31,10 @@ public class PluginInfo {
     private String version;
 
     @Getter
+    @Setter
+    private String apiVersion;
+
+    @Getter
     private final List<CommandDefinition> commands = new LinkedList<>();
 
     @Getter
@@ -52,6 +56,7 @@ public class PluginInfo {
         map.putIfAbsent("name", name);
         map.putIfAbsent("main", mainClass);
         map.putIfAbsent("version", version);
+        map.putIfAbsent("api-version", apiVersion);
 
         if (!map.containsKey("commands")) {
             var commandsMap = new HashMap<String, Object>();

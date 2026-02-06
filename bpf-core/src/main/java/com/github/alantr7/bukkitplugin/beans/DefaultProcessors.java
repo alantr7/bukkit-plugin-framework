@@ -11,13 +11,17 @@ import com.github.alantr7.bukkitplugin.annotations.processor.processing.executab
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.event.Event;
+import org.bukkit.event.EventHandler;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.LinkedList;
 import java.util.function.Consumer;
+import java.util.logging.Logger;
 
 public class DefaultProcessors {
 
@@ -125,6 +129,39 @@ public class DefaultProcessors {
         public void filter(Element element, RequiresPlugin annotation, ProcessChain chain) {
             if (!Bukkit.getPluginManager().isPluginEnabled(annotation.value()))
                 chain.cancel();
+        }
+    };
+
+    @SuppressWarnings("unchecked")
+    final AnnotationProcessor<EventHandler> EVENT_HANDLER = new AnnotationProcessor<>() {
+        public void processMethod(Method method, MethodMeta meta, Object classInstance, EventHandler annotation) {
+            Parameter[] params = method.getParameters();
+            Logger logger = manager.plugin.getLogger();
+            String className = classInstance.getClass().getName();
+            if (params.length != 1) {
+                logger.warning("[BeanManager] Invalid parameter count for event handler: " + className + "#" + method.getName());
+            } else if (!Event.class.isAssignableFrom(params[0].getType())) {
+                logger.warning("[BeanManager] Invalid event type for event handler: " + className + "#" + method.getName());
+            } else {
+                try {
+                    method.setAccessible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return;
+                }
+
+                Bukkit.getPluginManager().registerEvent((Class<Event>) params[0].getType(), DefaultProcessors.this.manager.plugin, annotation.priority(), (listener, event) -> {
+                    try {
+                        if (params[0].getType().isInstance(event)) {
+                            method.invoke(classInstance, event);
+                        }
+                    } catch (Exception e) {
+                        logger.warning("[BeanManager] Error in event execution for " + className + "#" + method.getName());
+                        e.printStackTrace();
+                    }
+
+                }, DefaultProcessors.this.manager.plugin, annotation.ignoreCancelled());
+            }
         }
     };
 
