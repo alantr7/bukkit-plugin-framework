@@ -12,10 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class GUI {
 
@@ -30,6 +27,8 @@ public abstract class GUI {
     private final HashMap<Integer, Map<com.github.alantr7.bukkitplugin.gui.ClickType, Runnable>> callbackMap = new HashMap<>();
 
     private final HashMap<Action, List<Runnable>> eventCallbackMap = new HashMap<>();
+
+    private final Set<Integer> lockedSlots = new HashSet<>();
 
     private boolean isDisposed = false;
 
@@ -165,6 +164,22 @@ public abstract class GUI {
         return player.getInventory().getItem(slot);
     }
 
+    public void lockSlot(int slot) {
+        this.lockedSlots.add(slot);
+    }
+
+    public void unlockSlot(int slot) {
+        this.lockedSlots.remove(slot);
+    }
+
+    public boolean isLocked(int slot) {
+        return this.lockedSlots.contains(slot);
+    }
+
+    public void clearSlotLocks() {
+        this.lockedSlots.clear();
+    }
+
     @Deprecated
     public void addLeftClickCallback(int slot, Runnable onItemClicked) {
         registerInteractionCallback(slot, com.github.alantr7.bukkitplugin.gui.ClickType.LEFT, onItemClicked);
@@ -256,6 +271,8 @@ public abstract class GUI {
         if (inventory == null)
             return;
         this.event = event;
+        if (this.lockedSlots.contains(slot))
+            event.setCancelled(true);
         if (!isInteractionEnabled() && event != null)
             event.setCancelled(true);
         if (type.isLeftClick()) {

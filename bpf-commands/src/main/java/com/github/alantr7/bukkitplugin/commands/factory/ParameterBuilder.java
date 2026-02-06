@@ -3,12 +3,10 @@ package com.github.alantr7.bukkitplugin.commands.factory;
 import com.github.alantr7.bukkitplugin.commands.executor.CommandContext;
 import com.github.alantr7.bukkitplugin.commands.executor.Evaluator;
 import com.github.alantr7.bukkitplugin.commands.registry.Parameter;
+import org.bukkit.command.CommandSender;
 
 import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
+import java.util.function.*;
 
 public class ParameterBuilder<T> {
 
@@ -28,7 +26,9 @@ public class ParameterBuilder<T> {
 
     List<Map.Entry<Predicate<T>, BiConsumer<CommandContext, T>>> testsAfter = new LinkedList<>();
 
-    Function<String[], Collection<String>> tabComplete;
+    Function<String[], Collection<String>> tabCompleteLegacy;
+
+    BiFunction<CommandSender, String[], Collection<String>> tabComplete;
 
     public ParameterBuilder(String name) {
         this(name, null);
@@ -56,10 +56,15 @@ public class ParameterBuilder<T> {
     }
 
     public ParameterBuilder<T> tabComplete(String... elements) {
-        return tabComplete(args -> Arrays.asList(elements));
+        return tabComplete((sender, args) -> Arrays.asList(elements));
     }
 
     public ParameterBuilder<T> tabComplete(Function<String[], Collection<String>> elements) {
+        this.tabCompleteLegacy = elements;
+        return this;
+    }
+
+    public ParameterBuilder<T> tabComplete(BiFunction<CommandSender, String[], Collection<String>> elements) {
         this.tabComplete = elements;
         return this;
     }
@@ -83,7 +88,7 @@ public class ParameterBuilder<T> {
         boolean isVariable = name.startsWith("{") && name.endsWith("}");
         var literal = isVariable ? name.replace("{", "").replace("}", "") : name;
 
-        return new Parameter(literal, !isVariable, (Evaluator<Object>) evaluator, (Function<CommandContext, Object>) defaultValue, ifMissingAction, ifEvalFail, testsBefore.toArray(Map.Entry[]::new), testsAfter.toArray(Map.Entry[]::new), tabComplete);
+        return new Parameter(literal, !isVariable, (Evaluator<Object>) evaluator, (BiFunction<CommandSender, CommandContext, Object>) defaultValue, ifMissingAction, ifEvalFail, testsBefore.toArray(Map.Entry[]::new), testsAfter.toArray(Map.Entry[]::new), this.tabCompleteLegacy != null ? (sender, args) -> (Collection)this.tabCompleteLegacy.apply(args) : this.tabComplete);
     }
 
     public static Consumer<CommandContext> respond(String message) {

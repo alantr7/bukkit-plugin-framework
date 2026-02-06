@@ -3,13 +3,11 @@ package com.github.alantr7.bukkitplugin.commands.registry;
 import com.github.alantr7.bukkitplugin.commands.executor.CommandContext;
 import com.github.alantr7.bukkitplugin.commands.executor.Evaluator;
 import lombok.Getter;
+import org.bukkit.command.CommandSender;
 
 import java.util.Collection;
 import java.util.Map;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
+import java.util.function.*;
 
 public class Parameter {
 
@@ -22,7 +20,7 @@ public class Parameter {
     private final Evaluator<Object> evaluator;
 
     @Getter
-    private final Function<CommandContext, Object> defaultValueProvider;
+    private final BiFunction<CommandSender, CommandContext, Object> defaultValueProvider;
 
     @Getter
     private Consumer<CommandContext> missingParameterResponse;
@@ -37,9 +35,9 @@ public class Parameter {
     private Map.Entry<Predicate<Object>, BiConsumer<CommandContext, Object>>[] testsAfter;
 
     @Getter
-    private Function<String[], Collection<String>> tabComplete;
+    private BiFunction<CommandSender, String[], Collection<String>> tabComplete;
 
-    public Parameter(String name, boolean isConstant, Evaluator<Object> evaluator, Function<CommandContext, Object> defaultValueProvider, Consumer<CommandContext> missingParameterResponse, BiConsumer<CommandContext, String> evalFailResponse, Map.Entry<Predicate<String>, BiConsumer<CommandContext, String>>[] testsBefore, Map.Entry<Predicate<Object>, BiConsumer<CommandContext, Object>>[] testsAfter, Function<String[], Collection<String>> tabComplete) {
+    public Parameter(String name, boolean isConstant, Evaluator<Object> evaluator, BiFunction<CommandSender, CommandContext, Object> defaultValueProvider, Consumer<CommandContext> missingParameterResponse, BiConsumer<CommandContext, String> evalFailResponse, Map.Entry<Predicate<String>, BiConsumer<CommandContext, String>>[] testsBefore, Map.Entry<Predicate<Object>, BiConsumer<CommandContext, Object>>[] testsAfter, BiFunction<CommandSender, String[], Collection<String>> tabComplete) {
         this.name = name;
         this.isConstant = isConstant;
         this.evaluator = evaluator;

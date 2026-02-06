@@ -94,7 +94,7 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor, TabC
             // Get default values, or send 'argument not provided' message
             else {
                 if (parameter.getDefaultValueProvider() != null) {
-                    context.setArgument(i, parameter.getDefaultValueProvider().apply(context));
+                    context.setArgument(i, parameter.getDefaultValueProvider().apply(sender, context));
                     continue;
                 }
 
@@ -239,7 +239,7 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor, TabC
                 if (handlerTabComplete == null)
                     return;
 
-                var completions = handlerTabComplete.apply(args);
+                var completions = handlerTabComplete.apply(commandSender, args);
                 if (completions != null && !completions.isEmpty())
                     for (String completion : completions) {
                         if (completion.startsWith(args[args.length - 1]))

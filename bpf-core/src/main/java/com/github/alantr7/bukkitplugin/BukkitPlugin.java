@@ -11,6 +11,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+
 public abstract class BukkitPlugin extends JavaPlugin implements Listener {
 
     private final ModuleManager moduleManager = new ModuleManager(this);
@@ -57,6 +59,18 @@ public abstract class BukkitPlugin extends JavaPlugin implements Listener {
 
     public <T> T getSingleton(Class<T> clazz) {
         return beanManager.getSingleton(clazz);
+    }
+
+    public File createDataFile(String name) {
+        File file = new File(this.getDataFolder(), name);
+
+        try {
+            file.createNewFile();
+            return file;
+        } catch (Exception var4) {
+            var4.printStackTrace();
+            return file;
+        }
     }
 
 }
