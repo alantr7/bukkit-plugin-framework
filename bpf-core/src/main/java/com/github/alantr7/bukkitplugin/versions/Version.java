@@ -1,6 +1,7 @@
 package com.github.alantr7.bukkitplugin.versions;
 
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.intellij.lang.annotations.RegExp;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,6 +20,25 @@ public class Version {
     private static final String VERSION_REGEX = "\\d+(.\\d+)*([ab])?";
 
     public static final Version INVALID = new Version(new Short[0], ALPHA);
+
+    private static Version SERVER_VERSION;
+    static {
+        String[] parts = Bukkit.getMinecraftVersion().split("\\.");
+        Short[] segments = new Short[3];
+
+        try {
+            for (int i = 0; i < parts.length; i++) {
+                String part = parts[i];
+                segments[i] = Short.parseShort(part);
+            }
+            if (parts.length == 2)
+                segments[2] = 0;
+
+            SERVER_VERSION = new Version(segments, RELEASE);
+        } catch (Exception ignored) {
+            SERVER_VERSION = new Version(new Short[]{1, 21, 0}, RELEASE);
+        }
+    }
 
     private final Short[] segments;
 
@@ -133,6 +153,10 @@ public class Version {
     @Override
     public String toString() {
         return this.stringified;
+    }
+
+    public static Version getServerVersion() {
+        return SERVER_VERSION;
     }
 
 }
