@@ -1,8 +1,6 @@
 package com.github.alantr7.bukkitplugin.annotations;
 
-import com.github.alantr7.bukkitplugin.annotations.generative.JavaPlugin;
-import com.github.alantr7.bukkitplugin.annotations.generative.Command;
-import com.github.alantr7.bukkitplugin.annotations.generative.Permission;
+import com.github.alantr7.bukkitplugin.annotations.generative.*;
 import com.github.alantr7.bukkitplugin.annotations.plugin.CommandDefinition;
 import com.github.alantr7.bukkitplugin.annotations.plugin.PermissionDefinition;
 import com.github.alantr7.bukkitplugin.annotations.plugin.PluginInfo;
@@ -15,6 +13,7 @@ import javax.lang.model.element.VariableElement;
 import javax.tools.Diagnostic;
 import javax.tools.StandardLocation;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Set;
 
 @AutoService(Processor.class)
@@ -55,6 +54,14 @@ public class AnnotationProcessor extends AbstractProcessor {
                     PluginInfo.inst.setVersion(plugin.version());
                     PluginInfo.inst.setApiVersion(plugin.apiVersion());
                     PluginInfo.inst.setDescription(plugin.description());
+                }
+
+                else if (annotation.getSimpleName().toString().equals("Depends")) {
+                    PluginInfo.inst.setDepend(Arrays.asList(element.getAnnotation(Depends.class).value()));
+                }
+
+                else if (annotation.getSimpleName().toString().equals("SoftDepends")) {
+                    PluginInfo.inst.setSoftDepend(Arrays.asList(element.getAnnotation(SoftDepends.class).value()));
                 }
 
                 else if (annotation.getSimpleName().toString().equals("Command")) {

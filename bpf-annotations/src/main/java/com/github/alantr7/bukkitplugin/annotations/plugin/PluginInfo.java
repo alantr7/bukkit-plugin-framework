@@ -35,6 +35,14 @@ public class PluginInfo {
     private String apiVersion;
 
     @Getter
+    @Setter
+    private List<String> depend;
+
+    @Getter
+    @Setter
+    private List<String> softDepend;
+
+    @Getter
     private final List<CommandDefinition> commands = new LinkedList<>();
 
     @Getter
@@ -57,6 +65,13 @@ public class PluginInfo {
         map.putIfAbsent("main", mainClass);
         map.putIfAbsent("version", version);
         map.putIfAbsent("api-version", apiVersion);
+
+        if (depend != null) {
+            map.putIfAbsent("depend", depend);
+        }
+        if (softDepend != null) {
+            map.putIfAbsent("softdepend", softDepend);
+        }
 
         if (!map.containsKey("commands")) {
             var commandsMap = new HashMap<String, Object>();
