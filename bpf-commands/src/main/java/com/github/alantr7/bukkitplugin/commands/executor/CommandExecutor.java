@@ -211,7 +211,7 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor, TabC
             var iterator = open.iterator();
             while (iterator.hasNext()) {
                 var handler = iterator.next();
-                if (handler.getParameters().length <= i) {
+                if (handler.getParameters().length <= i || !handler.isPermitted(commandSender)) {
                     iterator.remove();
                     continue;
                 }
@@ -228,7 +228,7 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor, TabC
 
         var tabComplete = new LinkedList<String>();
         open.forEach(handler -> {
-            if (args.length > handler.getParameters().length)
+            if (args.length > handler.getParameters().length || !handler.isPermitted(commandSender))
                 return;
 
             if (handler.getParameters()[args.length - 1].isConstant()) {

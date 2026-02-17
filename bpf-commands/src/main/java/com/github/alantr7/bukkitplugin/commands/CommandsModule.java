@@ -37,11 +37,9 @@ public class CommandsModule extends PluginModule {
                     var command = (Command) field.get(classInstance);
                     field.setAccessible(false);
 
-                    if (!executor.isRegistered(command.getName())) {
-                        var pluginCommand = getPlugin().getCommand(command.getName());
-                        if (pluginCommand != null) {
-                            pluginCommand.setExecutor(executor);
-                        }
+                    var pluginCommand = getPlugin().getCommand(command.getName());
+                    if (!executor.isRegistered(command.getName()) && pluginCommand != null) {
+                        pluginCommand.setExecutor(executor);
                     }
                     executor.registerCommand(command);
                 } catch (Exception ignored) {
