@@ -106,21 +106,20 @@ public class DefaultProcessors {
     final AnnotationProcessor<InvokePeriodically> INVOKE_PERIODICALLY = new AnnotationProcessor<>() {
         @Override
         public void processMethod(Method method, MethodMeta meta, Object classInstance, InvokePeriodically annotation) {
-            Bukkit.getScheduler().runTaskTimer(
-                    manager.plugin,
-                    new Consumer<>() {
-                        long ticks = 0;
-
-                        @Override
-                        public void accept(BukkitTask task) {
-                            manager.annotationManager.invoke(classInstance, method, meta);
-                            if (++ticks == annotation.limit())
-                                task.cancel();
-                        }
-                    },
-                    annotation.delay(),
-                    annotation.interval()
-            );
+            Consumer<BukkitTask> consumer = new Consumer<BukkitTask>() {
+                long ticks = 0;
+                @Override
+                public void accept(BukkitTask task) {
+                    manager.annotationManager.invoke(classInstance, method, meta);
+                    if (++ticks == annotation.limit())
+                        task.cancel();
+                }
+            };
+            if (annotation.sync()) {
+                Bukkit.getScheduler().runTaskTimer(manager.plugin, consumer, annotation.delay(), annotation.interval());
+            } else {
+                Bukkit.getScheduler().runTaskTimerAsynchronously(manager.plugin, consumer, annotation.delay(), annotation.interval());
+            }
         }
     };
 
